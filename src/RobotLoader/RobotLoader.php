@@ -84,7 +84,7 @@ class RobotLoader
 	 */
 	public function tryLoad($type)
 	{
-		$type = ltrim($type, '\\'); // PHP namespace bug #49143
+		$type = strtolower(ltrim($type, '\\')); // PHP namespace bug #49143
 		$info = isset($this->classes[$type]) ? $this->classes[$type] : null;
 
 		if ($this->autoRebuild) {
@@ -281,10 +281,11 @@ class RobotLoader
 		$namespace = '';
 		$level = $minLevel = 0;
 		$classes = [];
+		$name = '';
 
 		if (preg_match('#//nette' . 'loader=(\S*)#', $code, $matches)) {
 			foreach (explode(',', $matches[1]) as $name) {
-				$classes[] = $name;
+				$classes[] = strtolower($name);
 			}
 			return $classes;
 		}
@@ -323,7 +324,7 @@ class RobotLoader
 					case T_INTERFACE:
 					case T_TRAIT:
 						if ($name && $level === $minLevel) {
-							$classes[] = $namespace . $name;
+							$classes[] = strtolower($namespace . $name);
 						}
 						break;
 
